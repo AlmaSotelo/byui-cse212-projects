@@ -1,3 +1,7 @@
+using System.Data;
+using System.Security.Cryptography.X509Certificates;
+using Microsoft.VisualStudio.TestPlatform.ObjectModel;
+
 public static class Arrays
 {
     /// <summary>
@@ -11,9 +15,32 @@ public static class Arrays
         // TODO Problem 1 Start
         // Remember: Using comments in your program, write down your process for solving this problem
         // step by step before you write the code. The plan should be clear enough that it could
-        // be implemented by another person.
+        // be implemented by another person:
 
-        return []; // replace this return statement with your own
+        // My Plan:
+        // 1.Provide "number" as input to the function
+        // 2.Provide "length" as input to the function
+        // 3.Create an array of size the "length" value
+        // Note: Our array will start with "number" as the first element. Here is why we know that any number is multiple of itself;
+        //           x is multiple of n if x divided by n the module is 0 (x%n=0)
+        //           x=7, n=7 then 7%7=0
+        // 4.What other numbers (x's) divided by "number" result a module of 0 that could be added to our array? 
+        //    4.1  Add to our array values resulting from multiplying "number" by 1, then  by 2, then by 3,and so on until we reach "length" times.
+        //    Explanation: 7 x 1 = 7
+        //                 7 x 2 = 14  <-- 14 is multiple of 7
+        //                 7 x 3 = 21  <-- 21 is multiple of 7
+        //                 7 x 4 = 28           and so on..
+        //                 7 x 5 = 35   
+
+        // My code:
+        var result = new double[length];
+        //var increment = number;
+        for (int i = 0; i < length; i++)
+        {
+            result[i] = number * (i + 1);
+        }
+        return result;
+                
     }
 
     /// <summary>
@@ -29,5 +56,20 @@ public static class Arrays
         // Remember: Using comments in your program, write down your process for solving this problem
         // step by step before you write the code. The plan should be clear enough that it could
         // be implemented by another person.
+
+        // My plan:
+        // 1.Create a new empty list where to hold the segments
+        // 2.Hold the size of the original list in a variable
+        // 3.Get the segment between index=0 to index=amount-2 and add it to the end
+        // 4.Remove segment from index=0 to index=current size minus original size.
+    
+        // My code:
+        List<int> segment;
+        int originalSize = data.Count;
+        segment = data.GetRange(0, originalSize-amount);
+        data.AddRange(segment);
+        data.RemoveRange(0, data.Count - originalSize);
+        
+
     }
 }
