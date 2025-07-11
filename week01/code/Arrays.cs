@@ -60,7 +60,7 @@ public static class Arrays
         // My plan:
         // 1.Create a new empty list where to hold the segments
         // 2.Hold the size of the original list in a variable
-        // 3.Get the segment between index=0 to index=amount-2 and add it to the end
+        // 3.Get the segment between index=0 to index=originalSize-amount-1 and add it to the end
         // 4.Remove segment from index=0 to index=current size minus original size.
     
         // My code:
