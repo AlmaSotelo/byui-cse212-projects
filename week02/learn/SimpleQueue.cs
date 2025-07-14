@@ -66,8 +66,8 @@
         if (_queue.Count <= 0)
             throw new IndexOutOfRangeException();
 
-        var value = _queue[1];
-        _queue.RemoveAt(1);
+        var value = _queue[0]; //changed from 1 to 0, because when dequeueing we must remove the first item, which is located in index 0, not in index 1.
+        _queue.RemoveAt(0);
         return value;
     }
 }
