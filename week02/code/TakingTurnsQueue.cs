@@ -1,3 +1,5 @@
+using System.Runtime.CompilerServices;
+
 /// <summary>
 /// This queue is circular.  When people are added via AddPerson, then they are added to the 
 /// back of the queue (per FIFO rules).  When GetNextPerson is called, the next person
@@ -11,7 +13,7 @@ public class TakingTurnsQueue
 {
     private readonly PersonQueue _people = new();
 
-    public int Length => _people.Length;
+    public int Length => _people.Length; //exposes the number of elements in the private _people array to other parts of the program, while still keeping the _people field itself private and protected from external modification.
 
     /// <summary>
     /// Add new people to the queue with a name and number of turns
@@ -45,7 +47,13 @@ public class TakingTurnsQueue
                 person.Turns -= 1;
                 _people.Enqueue(person);
             }
-
+            // -------- Start Fix ------------------
+            // Fix: program was missing code to handle what happens when the person doesn't have any more turns (zero or less), which should be infinite, in other words, we never remove them. 
+            if (person.Turns <= 0)
+            {
+                _people.Enqueue(person);
+            }
+            // -------------- End Fix ----------------- 
             return person;
         }
     }
