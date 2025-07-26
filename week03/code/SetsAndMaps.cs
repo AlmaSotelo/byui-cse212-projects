@@ -1,3 +1,4 @@
+using System.Reflection.PortableExecutable;
 using System.Text.Json;
 
 public static class SetsAndMaps
@@ -19,10 +20,37 @@ public static class SetsAndMaps
     /// that there were no duplicates) and therefore should not be returned.
     /// </summary>
     /// <param name="words">An array of 2-character words (lowercase, no duplicates)</param>
+    
     public static string[] FindPairs(string[] words)
     {
         // TODO Problem 1 - ADD YOUR CODE HERE
-        return [];
+        /// Logic Steps:
+    /// 1. Create a set to track seen words
+    /// 2. Create a list to store the matched pairs
+    /// 3. Loop through each word in the original array
+    ///       -- ignoring pairs with same leters -like "aa"
+    ///       -- create the reverse of the word
+    ///       -- check if the reverse word is not in our set to add it in our list
+    /// 4. Return the resulting list 
+        var seen = new HashSet<string>();
+        var result = new List<string>();
+
+        foreach (var word in words)
+        {
+            if (word[0] == word[1])
+                continue;  //stop this if
+            char firstLetter = word[0];
+            char secondLetter = word[1];
+            string reversed = $"{secondLetter}{firstLetter}";
+            if (seen.Contains(reversed))
+            {
+                result.Add($"{word} & {reversed}");
+            }
+            else
+                seen.Add(word); // add the first word of possible reverse pair            
+        }
+        
+        return result.ToArray();
     }
 
     /// <summary>
@@ -36,6 +64,10 @@ public static class SetsAndMaps
     /// </summary>
     /// <param name="filename">The name of the file to read</param>
     /// <returns>fixed array of divisors</returns>
+    /// 
+    /// Logic steps:
+    /// Get what is in index [3] of each record and with the dictionary, count every time we find that unique degree.
+    
     public static Dictionary<string, int> SummarizeDegrees(string filename)
     {
         var degrees = new Dictionary<string, int>();
@@ -43,6 +75,13 @@ public static class SetsAndMaps
         {
             var fields = line.Split(",");
             // TODO Problem 2 - ADD YOUR CODE HERE
+
+            string degree = fields[3];
+            if (degrees.ContainsKey(degree))
+                degrees[degree]++;  // increses by one the time that we have found again the same degree
+            else
+                degrees[degree] = 1; // it is the first time we see this degree in our dictionary    
+
         }
 
         return degrees;
@@ -64,10 +103,40 @@ public static class SetsAndMaps
     /// Reminder: You can access a letter by index in a string by 
     /// using the [] notation.
     /// </summary>
+    
+    /// Logic Steps:
+    ///    - 1. make the case doesn't matter, and remove spaces
+    ///    - 2. Return false inmediatly we learn the two words have different length
+    ///    - 3. In a dictionary, store how many times the uniquely letter repeats itself in the first word. The letter is the key, the times is the value
+    ///    - 4. Compare each letter in word2 and if it founds the same, subtract one.
+    ///    - 5. When finish comparing, check if a letter repeats more times in word2 than in word1, if so, the times for that letter would be less than 0.
     public static bool IsAnagram(string word1, string word2)
     {
         // TODO Problem 3 - ADD YOUR CODE HERE
-        return false;
+        word1 = word1.Replace(" ", "").ToLower();
+        word2 = word2.Replace(" ", "").ToLower();
+
+        if (word1.Length != word2.Length)
+            return false;
+        Dictionary<char, int> counter = new Dictionary<char, int>();
+        foreach (char l in word1)
+        {
+            if (counter.ContainsKey(l)) 
+                counter[l]++;
+            else
+                counter[l] = 1;    
+        }
+
+        foreach (char l in word2)
+        {
+            if (!counter.ContainsKey(l)) // if word2 contains a letter that is not in directory, then return false.
+                return false;
+            if (counter.ContainsKey(l))
+                    counter[l]--;
+            if (counter[l] < 0) // ensure the frecuency of each individual letter is the same. Did this letter in second word ocurr more times than in the first?
+                return false;       
+        }
+        return true;
     }
 
     /// <summary>
@@ -101,6 +170,7 @@ public static class SetsAndMaps
         // on those classes so that the call to Deserialize above works properly.
         // 2. Add code below to create a string out each place a earthquake has happened today and its magitude.
         // 3. Return an array of these string descriptions.
+        
         return [];
     }
 }

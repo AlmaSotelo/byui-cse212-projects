@@ -11,6 +11,11 @@
  * Each row represents the player's stats for a single season with a single team.
  */
 
+// My Logic steps:
+//    1. Accumulate total points for each player
+//    2. Sort the dictionary by total points at the top
+//    3. Select the top 10 players and print playerID and accumulated points.
+
 using Microsoft.VisualBasic.FileIO;
 
 public class Basketball
@@ -23,14 +28,35 @@ public class Basketball
         reader.TextFieldType = FieldType.Delimited;
         reader.SetDelimiters(",");
         reader.ReadFields(); // ignore header row
-        while (!reader.EndOfData) {
-            var fields = reader.ReadFields()!;
+        while (!reader.EndOfData)
+        {
+            var fields = reader.ReadFields()!; //my note: ! at the end is used to suppress copiler warnings about possible null values when your're sure a value isn't null.
             var playerId = fields[0];
             var points = int.Parse(fields[8]);
+
+            //Step 1. Add
+            // check if the player in the our new dictionary of players has been seen before and add the corresponding points
+            if (players.ContainsKey(playerId))
+            {
+                players[playerId] += points; // player is in player
+            }
+            else
+            {
+                players[playerId] = points; // first time in our dictionary
+            }
         }
 
-        Console.WriteLine($"Players: {{{string.Join(", ", players)}}}");
+        // Step 2. Sort
+        // Note: p=>p.value -- for each player, sort by its value
+        var topPlayers = players.OrderByDescending(p => p.Value).Take(10).ToList(); 
 
-        var topPlayers = new string[10];
+        // Step 3. Print results
+         // Print results
+        //Console.WriteLine($"Players: {{{string.Join(", ", players)}}}");
+               
+
+        //var topPlayers = new string[10];        
+
     }
+    
 }

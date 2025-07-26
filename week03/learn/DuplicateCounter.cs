@@ -22,9 +22,21 @@
         Console.WriteLine($"Number of duplicates : {CountDuplicates(data)}");
     }
 
+    //check if an item exists in the set and if so, keeps track in a counter for how many times it apears in the set.   
     private static int CountDuplicates(int[] data)
     {
         // Add code here.
-        return 0;
+        var arrayWithNotDuplicates = new HashSet<int>(); // create a new hashset where to store items not duplicated in the set
+        var duplicateCount = 0;
+        foreach (var item in data)
+        {
+            //check if our hashset contain the item being checked in turn, if exists, do not add it, just increment the counter, if it doesn't, add it to our hashset
+            if (arrayWithNotDuplicates.Contains(item))
+                duplicateCount++;
+            else
+                arrayWithNotDuplicates.Add(item);
+        }
+        
+        return duplicateCount;
     }
 }

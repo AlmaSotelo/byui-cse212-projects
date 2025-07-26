@@ -6,9 +6,16 @@ public class Translator
         englishToGerman.AddWord("House", "Haus");
         englishToGerman.AddWord("Car", "Auto");
         englishToGerman.AddWord("Plane", "Flugzeug");
+        englishToGerman.AddWord("Cloud", "Wolke"); // added for testing
+        englishToGerman.AddWord("Bus", "Bus");    // added for testing
+        englishToGerman.AddWord("House", "Haus"); // added for testing
+
         Console.WriteLine(englishToGerman.Translate("Car")); // Auto
         Console.WriteLine(englishToGerman.Translate("Plane")); // Flugzeug
         Console.WriteLine(englishToGerman.Translate("Train")); // ???
+        Console.WriteLine(englishToGerman.Translate("Cloud")); // added for testing
+        Console.WriteLine(englishToGerman.Translate("Bus")); // added for testing
+        Console.WriteLine(englishToGerman.Translate("Scissors")); // added for testing
     }
 
     private Dictionary<string, string> _words = new();
@@ -25,6 +32,13 @@ public class Translator
     public void AddWord(string fromWord, string toWord)
     {
         // ADD YOUR CODE HERE
+
+        //only add it if the word is not in our directory yet.
+        if (!_words.ContainsKey(fromWord))
+        {
+            _words.Add(fromWord, toWord);
+        }
+          
     }
 
     /// <summary>
@@ -35,6 +49,16 @@ public class Translator
     public string Translate(string fromWord)
     {
         // ADD YOUR CODE HERE
-        return "";
+        //check if word exists
+        if (_words.ContainsKey(fromWord))
+        {
+            return _words[fromWord];
+        }
+        // do this if the word exists
+        else
+        {
+            return "???";
+        }
+       
     }
 }
