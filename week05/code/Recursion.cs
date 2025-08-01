@@ -15,7 +15,11 @@ public static class Recursion
     public static int SumSquaresRecursive(int n)
     {
         // TODO Start Problem 1
-        return 0;
+        // Base Case to end the function
+        if (n <= 0)
+            return 0;
+        // use recursive to calculate the return
+        return n * n + SumSquaresRecursive(n - 1);
     }
 
     /// <summary>
@@ -40,6 +44,19 @@ public static class Recursion
     public static void PermutationsChoose(List<string> results, string letters, int size, string word = "")
     {
         // TODO Start Problem 2
+        // recursion should stop until word reaches desired size. Base: if (word.Lenght == size)
+        if (word.Length == size)
+        {
+            results.Add(word);
+            return;
+        }
+        // recursion case for remaining letters
+        for (int i = 0; i < letters.Length; i++)
+        {
+            char letter = letters[i]; // work in current letter
+            string remaining = letters.Remove(i, 1); // remove that letter from current remaining string to get letters ready  and size for recursion
+            PermutationsChoose(results, remaining, size, word + letter);
+        }   
     }
 
     /// <summary>
@@ -97,9 +114,19 @@ public static class Recursion
             return 4;
 
         // TODO Start Problem 3
+        // initialize dictionary for the first time calling the function     
+        if (remember == null) 
+            remember = new Dictionary<int, decimal>();
 
-        // Solve using recursion
-        decimal ways = CountWaysToClimb(s - 1) + CountWaysToClimb(s - 2) + CountWaysToClimb(s - 3);
+        // check if we have solved this before
+        if (remember.ContainsKey(s)) 
+            return remember[s];
+
+        // otherwise solve with recursion
+        decimal ways = CountWaysToClimb(s - 1, remember) + CountWaysToClimb(s - 2, remember) + CountWaysToClimb(s - 3, remember);
+
+        // store result for potential later use  
+        remember[s] = ways;    
         return ways;
     }
 
@@ -119,6 +146,21 @@ public static class Recursion
     public static void WildcardBinary(string pattern, List<string> results)
     {
         // TODO Start Problem 4
+        // Base Case is when there are no more "*" to replace
+        int starIndex = pattern.IndexOf("*");
+        if (starIndex == -1) // index not found
+        {
+            results.Add(pattern);
+            return;
+        }
+
+        // Recursive case. Step1. Replace "*" with "0" and with "1"
+        string replacingZero = pattern.Substring(0, starIndex) + "0" + pattern.Substring(starIndex + 1);
+        //Note: using Substring instead of Remove because we want to replace one star at the time, not all. In this case, we are spliting the first part of the string (before the star), repalce with a 0, then adding the second part of the string (after the star) till the end of the string
+        string replacingOne = pattern.Substring(0, starIndex) + "1" + pattern.Substring(starIndex + 1);
+        // Step2. recurse the function to get the final results
+        WildcardBinary(replacingZero, results);
+        WildcardBinary(replacingOne, results);
     }
 
     /// <summary>
@@ -129,15 +171,31 @@ public static class Recursion
     {
         // If this is the first time running the function, then we need
         // to initialize the currPath list.
-        if (currPath == null) {
+        if (currPath == null)
+        {
             currPath = new List<ValueTuple<int, int>>();
         }
-        
+
         // currPath.Add((1,2)); // Use this syntax to add to the current path
 
         // TODO Start Problem 5
         // ADD CODE HERE
+        currPath.Add((x, y)); // track the current path through the maze
 
         // results.Add(currPath.AsString()); // Use this to add your path to the results array keeping track of complete maze solutions when you find the solution.
+        if (maze.IsEnd(x, y)) // check for end
+        {
+            results.Add(currPath.AsString());
+            return;
+        }
+        // check what direction is OK to move to
+        if (maze.IsValidMove(currPath, x + 1, y)) // to the right
+            SolveMaze(results, maze, x + 1, y, new List<(int, int)>(currPath));
+        if (maze.IsValidMove(currPath, x-1,y))  // to the left
+            SolveMaze(results, maze, x - 1, y, new List<(int, int)>(currPath));
+        if (maze.IsValidMove(currPath, x,y+1))  // to the bottom
+            SolveMaze(results, maze, x, y+1, new List<(int, int)>(currPath)); 
+        if (maze.IsValidMove(currPath, x,y-1))  // to the top
+            SolveMaze(results, maze, x, y-1, new List<(int, int)>(currPath));        
     }
 }
